@@ -1,4 +1,4 @@
-# tf-aws-module_primitive-iam_openid_connect_provider
+# simple
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -10,19 +10,17 @@
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
+No providers.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_aws_iam_openid_connect_provider"></a> [aws\_iam\_openid\_connect\_provider](#module\_aws\_iam\_openid\_connect\_provider) | ../../ | n/a |
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_iam_openid_connect_provider.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider) | resource |
+No resources.
 
 ## Inputs
 
