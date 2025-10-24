@@ -2,6 +2,7 @@ package testimpl
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -13,16 +14,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	errFailedToGetOIDCProvider = "Failed to get OIDC provider"
+)
+
 func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 	iamClient := GetAWSIAMClient(t)
 
 	oidcProviderArn := terraform.Output(t, ctx.TerratestTerraformOptions(), "arn")
+	oidcProviderURL := terraform.Output(t, ctx.TerratestTerraformOptions(), "url")
 
 	t.Run("TestOIDCProviderExists", func(t *testing.T) {
 		provider, err := iamClient.GetOpenIDConnectProvider(context.TODO(), &iam.GetOpenIDConnectProviderInput{
 			OpenIDConnectProviderArn: &oidcProviderArn,
 		})
-		require.NoError(t, err, "Failed to get OIDC provider")
+		require.NoError(t, err, errFailedToGetOIDCProvider)
 		assert.NotNil(t, provider, "OIDC provider should not be nil")
 		assert.NotEmpty(t, provider.Url, "OIDC provider URL should not be empty")
 		assert.NotEmpty(t, provider.ClientIDList, "OIDC provider should have at least one client ID")
@@ -33,7 +39,7 @@ func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 		provider, err := iamClient.GetOpenIDConnectProvider(context.TODO(), &iam.GetOpenIDConnectProviderInput{
 			OpenIDConnectProviderArn: &oidcProviderArn,
 		})
-		require.NoError(t, err, "Failed to get OIDC provider")
+		require.NoError(t, err, errFailedToGetOIDCProvider)
 
 		// Verify the URL is present and properly formatted
 		// Note: AWS stores OIDC provider URLs without the https:// prefix
@@ -58,7 +64,7 @@ func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 		provider, err := iamClient.GetOpenIDConnectProvider(context.TODO(), &iam.GetOpenIDConnectProviderInput{
 			OpenIDConnectProviderArn: &oidcProviderArn,
 		})
-		require.NoError(t, err, "Failed to get OIDC provider")
+		require.NoError(t, err, errFailedToGetOIDCProvider)
 
 		// Verify tags are present (if any were set in the test configuration)
 		if len(provider.Tags) > 0 {
@@ -67,6 +73,27 @@ func TestComposableComplete(t *testing.T, ctx types.TestContext) {
 				assert.NotNil(t, tag.Value, "Tag value should not be nil")
 			}
 		}
+	})
+
+	t.Run("TestOIDCProviderURLOutput", func(t *testing.T) {
+		// Verify the URL output from Terraform is present and correctly formatted
+		provider, err := iamClient.GetOpenIDConnectProvider(context.TODO(), &iam.GetOpenIDConnectProviderInput{
+			OpenIDConnectProviderArn: &oidcProviderArn,
+		})
+		require.NoError(t, err, errFailedToGetOIDCProvider)
+
+		// Verify the URL output is not empty
+		assert.NotEmpty(t, oidcProviderURL, "URL output should not be empty")
+
+		// Verify AWS stored the URL correctly (without protocol prefix)
+		assert.NotContains(t, *provider.Url, "://", "AWS OIDC provider URL should not contain protocol prefix")
+		assert.Equal(t, "example.com/oidc", *provider.Url, "AWS stored URL should match the expected value without protocol")
+
+		// The Terraform output should ALWAYS include the https:// prefix for usability
+		assert.True(t, strings.HasPrefix(oidcProviderURL, "https://"),
+			"Terraform URL output should always include https:// prefix")
+		assert.Equal(t, "https://example.com/oidc", oidcProviderURL,
+			"URL output should be https://example.com/oidc")
 	})
 }
 
