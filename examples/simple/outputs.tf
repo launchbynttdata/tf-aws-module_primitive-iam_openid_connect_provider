@@ -7,3 +7,8 @@ output "tags_all" {
   description = "A map of tags assigned to the resource, including those inherited from the provider default_tags configuration block."
   value       = module.aws_iam_openid_connect_provider.tags_all
 }
+
+output "url" {
+  description = "The URL of the IAM OpenID Connect provider"
+  value       = module.aws_iam_openid_connect_provider.url
+}

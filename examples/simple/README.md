@@ -37,4 +37,5 @@ No resources.
 |------|-------------|
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the resource |
 | <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all) | A map of tags assigned to the resource, including those inherited from the provider default\_tags configuration block. |
+| <a name="output_url"></a> [url](#output\_url) | The URL of the IAM OpenID Connect provider |
 <!-- END_TF_DOCS -->
