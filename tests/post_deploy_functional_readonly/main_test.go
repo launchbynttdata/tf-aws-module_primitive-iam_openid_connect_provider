@@ -25,7 +25,7 @@ const (
 	infraTFVarFileNameDefault        = "test.tfvars"
 )
 
-func TestOIDCProviderModule(t *testing.T) {
+func TestOIDCProviderModuleReadOnly(t *testing.T) {
 
 	ctx := types.CreateTestContextBuilder().
 		SetTestConfig(&testimpl.ThisTFModuleConfig{}).
@@ -33,5 +33,5 @@ func TestOIDCProviderModule(t *testing.T) {
 		SetTestConfigFileName(infraTFVarFileNameDefault).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableComplete)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestComposableCompleteReadOnly)
 }
