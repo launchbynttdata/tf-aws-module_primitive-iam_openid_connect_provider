@@ -19,6 +19,14 @@ const (
 )
 
 func TestComposableComplete(t *testing.T, ctx types.TestContext) {
+	assertOIDCProvider(t, ctx)
+}
+
+func TestComposableCompleteReadOnly(t *testing.T, ctx types.TestContext) {
+	assertOIDCProvider(t, ctx)
+}
+
+func assertOIDCProvider(t *testing.T, ctx types.TestContext) {
 	iamClient := GetAWSIAMClient(t)
 
 	oidcProviderArn := terraform.Output(t, ctx.TerratestTerraformOptions(), "arn")
