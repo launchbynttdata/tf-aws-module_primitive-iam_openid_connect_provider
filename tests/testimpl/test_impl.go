@@ -29,8 +29,8 @@ func TestComposableCompleteReadOnly(t *testing.T, ctx types.TestContext) {
 func assertOIDCProvider(t *testing.T, ctx types.TestContext) {
 	iamClient := GetAWSIAMClient(t)
 
-	oidcProviderArn := terraform.Output(t, ctx.TerratestTerraformOptions(), "arn")
-	oidcProviderURL := terraform.Output(t, ctx.TerratestTerraformOptions(), "url")
+	oidcProviderArn := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "arn")
+	oidcProviderURL := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "url")
 
 	t.Run("TestOIDCProviderExists", func(t *testing.T) {
 		provider, err := iamClient.GetOpenIDConnectProvider(context.TODO(), &iam.GetOpenIDConnectProviderInput{
